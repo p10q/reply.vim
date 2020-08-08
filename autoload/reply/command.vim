@@ -139,11 +139,16 @@ function! reply#command#stop(bang) abort
 endfunction
 " }}}
 
+function! StripFront(input_string)
+    return substitute(a:input_string, '^\s*\(.\{-}\)$', '\1', '')
+endfunction
+
 " {{{ Send
 function! reply#command#send(str, line_start, line_end) abort
     if s:not_supported()
         return
     endif
+    " call reply#log('send(', a:str, a:line_start, a:line_end, ')')
 
     let str = a:str
     if str ==# ''
@@ -166,8 +171,35 @@ function! reply#command#send(str, line_start, line_end) abort
         return
     endif
 
+    " call reply#log('begin output')
     try
-        call r.send_string(str)
+        let outputLines = split(str, "\n")
+        " call reply#log('outputLines', outputLines)
+        if (len(outputLines) > 1)
+          let last_line_output = outputLines[(len(outputLines)-1)]
+          let last_line_front_stripped = StripFront(last_line_output)
+          let outputNoEmptyLines = []
+          let outputExtraTrailingNewline = (len(last_line_output) != len(last_line_front_stripped))
+          for line in outputLines
+            let lineTrimmed = trim(line)
+            let isCommentLine = lineTrimmed[0] == '#'
+            if (len(lineTrimmed) > 0 && !isCommentLine)
+              let outputNoEmptyLines += [line]
+            endif
+          endfor
+          " call reply#log('outputNoEmptyLines', outputNoEmptyLines)
+          for outputLine in outputLines
+            call r.send_string(outputLine)
+          endfor
+          " let outputText = join(outputNoEmptyLines, "\n")
+          " call r.send_string(outputText)
+          " call reply#log('output newline', outputExtraTrailingNewline)
+          if outputExtraTrailingNewline
+            call r.send_string("\n")
+          endif
+        else
+          call r.send_string(str)
+        endif
     catch /^reply\.vim: /
     endtry
 endfunction

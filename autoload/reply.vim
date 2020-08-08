@@ -32,3 +32,29 @@ function! reply#echo(fmt, ...) abort
     endif
     echo 'reply.vim: ' . msg
 endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" "I'm from Hollygrove, the holy Mecca"
+" https://vi.stackexchange.com/questions/17606/vmap-and-visual-block-how-do-i-write-a-function-to-operate-once-for-the-entire
+" https://vi.stackexchange.com/questions/25104/how-do-i-substitute-inside-the-visual-selection-in-a-vimscript-function
+function! SendToRepl()
+  execute "normal! vis\<Esc>"
+  '<,'>ReplSend
+endfunction
+
+function! VisualSendToRepl()
+  echom "running command"
+  '<,'>ReplSend
+  echom "running done"
+endfunction
+
+function! SendBufferToRepl()
+  execute "normal! ggVG\<Esc>"
+  '<,'>ReplSend
+endfunction
+nnoremap <silent> e :<c-u>call SendToRepl()<CR>
+vnoremap <silent> e :<c-u>call VisualSendToRepl()<CR>
+nnoremap <silent> <leader>eb :<c-u>call SendBufferToRepl()<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

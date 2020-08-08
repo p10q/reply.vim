@@ -265,7 +265,7 @@ function! s:base_extract_user_input(start_line, end_line) dict abort
         let i -= 1
     endwhile
     if i != len(lines) - 1
-        let lines = lines[: i]
+        " let lines = lines[: i]
     endif
 
     let exprs = self.extract_input_from_terminal_buf(lines)
