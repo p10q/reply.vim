@@ -94,9 +94,10 @@ function! reply#command#start(args, bang, mods, has_range, start, last) abort
     catch /^reply\.vim: /
     endtry
 
-    if a:has_range && bufnr != bufnr('%')
-        wincmd p
-    endif
+    " if a:has_range && bufnr != bufnr('%')
+    "     wincmd p
+    " endif
+    wincmd p
 endfunction
 
 function! reply#command#completion_start(arglead, cmdline, cursorpos) abort
