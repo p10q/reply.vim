@@ -213,6 +213,19 @@ to avoid consuming too wide space by REPL.
 `b:reply_termwin_max_height` and `b:reply_termwin_max_width` are buffer-local version of the
 variables.
 
+### Notes on using IPython
+
+- I have not been able to get ipythonrc to work reliably, so to make this work with IPython I make these hacks:
+
+* find `ipython` used in path
+* mv `ipython` to `ipython.bin`
+* create file `ipython`:
+```
+#!/bin/bash
+
+ipython.bin --no-autoindent --TerminalInteractiveShell.editing_mode=vi
+```
+
 
 ## License
 
